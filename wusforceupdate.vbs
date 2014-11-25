@@ -47,20 +47,19 @@ Set installationResult = installer.Install()
 LogFile.WriteLine( "Installation Result: " & installationResult.ResultCode )
 LogFile.WriteLine( "Reboot Required: " & installationResult.RebootRequired & vbCRLF )
 
-LogFile.WriteLine( "Listing of updates installed " _
-    & "and individual installation results:" )
+LogFile.WriteLine( "Listing of updates installed and individual installation results:" )
 
 For I = 0 to updatesToInstall.Count - 1
   LogFile.WriteLine( I + 1 & "> " & updatesToInstall.Item(i).Title _ 
     & ": " & installationResult.GetUpdateResult(i).ResultCode ) 
 Next
 
-If installationResult.RebootRequired = -1 then
+'проверим требуется ли перезагрузка после установки обновлений
+Set systemInfo = CreateObject("Microsoft.Update.SystemInfo")
+If systemInfo.RebootRequired Then
   LogFile.WriteLine("RebootRequired")
-  ShutDown(ShutdownOption) ' <-- normally now you should call for a R E B O O T.....
-End if
-
-'<-- O P T I O N A L
+  ShutDown(ShutdownOption)
+End if	
 
 LogFile.WriteLine( "STOP TIME : " & now)
 LogFile.WriteLine("***************************************************************")
